@@ -1,0 +1,4 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+input { display:block; margin:8px 0; padding:8px; width:260px; }
+button { padding:8px 12px; }
+#msg { margin-top:12px; color: red; }
