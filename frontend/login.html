@@ -41,8 +41,11 @@
         localStorage.setItem('user', JSON.stringify(data.user));
         document.getElementById('msg').textContent = 'Login successful.';
 
-        // redirect to tasks page (not provided here)
-        // window.location.href = 'tasks.html';
+        // redirect to dashboard
+        setTimeout(() => {
+        window.location.href = 'dashboard.html';
+        }, 800); // short delay so user sees the success message
+
       } catch (err) {
         document.getElementById('msg').textContent = err.error || 'Login failed.';
       }

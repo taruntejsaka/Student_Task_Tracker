@@ -1,4 +1,173 @@
-body { font-family: Arial, sans-serif; margin: 20px; }
-input { display:block; margin:8px 0; padding:8px; width:260px; }
-button { padding:8px 12px; }
-#msg { margin-top:12px; color: red; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fc;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background-color: #3298dc; /* Highlight color */
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    header nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    header nav a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    /* Headings */
+    h1, h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    /* Forms */
+    form {
+      margin: 20px 0;
+    }
+    input, select {
+      padding: 10px 14px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      width: 100%;
+      transition: border 0.3s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 8px 0;
+      background: #3498db;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    button:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+
+    /* Message */
+    #msg {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #e74c3c;
+    }
+
+    /* Dashboard Controls */
+    .dashboard-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .dashboard-controls label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-right: 4px;
+    }
+    .dashboard-controls input,
+    .dashboard-controls select {
+      width: auto;
+      min-width: 120px;
+    }
+
+    /* Task Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    thead {
+      background: #3498db;
+      color: #fff;
+    }
+    thead th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    tbody tr {
+      background: #fff;
+      transition: background 0.2s;
+    }
+    tbody tr:nth-child(even) {
+      background: #f4f6fa;
+    }
+    tbody tr:hover {
+      background: #ecf5fb;
+    }
+    td {
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+    td button {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      background: #e74c3c;
+    }
+    td button:hover {
+      background: #c0392b;
+    }
+
+    /* Navbar / Links */
+    nav a {
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 500;
+      color: #3498db;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #2980b9;
+    }
