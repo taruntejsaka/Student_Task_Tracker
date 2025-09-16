@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Create Task - Student Task Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .form-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    .form-container h2 {
+      text-align: center;
+    }
+    .form-container label {
+      display: block;
+      margin-top: 10px;
+    }
+    .form-container input, 
+    .form-container select, 
+    .form-container button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    .form-container button {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Create Task</h2>
+    <form id="taskForm">
+      <label>Title:</label>
+      <input type="text" id="title" required />
+
+      <label>Priority:</label>
+      <select id="priority">
+        <option value="Low">Low</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="High">High</option>
+      </select>
+
+      <label>Category:</label>
+      <input type="text" id="category" />
+
+      <label>Due Date:</label>
+      <input type="date" id="dueDate" />
+
+      <label>Status:</label>
+      <select id="status">
+        <option value="Pending" selected>Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+
+      <button type="submit">Create Task</button>
+    </form>
+    <button onclick="goBack()">Back to Dashboard</button>
+  </div>
+
+  <script>
+    const API = "http://localhost:5001/api/tasks";
+    const token = localStorage.getItem("token");
+
+    document.getElementById('taskForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const taskData = {
+        title: document.getElementById('title').value,
+        status: document.getElementById('status').value,
+        priority: document.getElementById('priority').value,
+        category: document.getElementById('category').value,
+        dueDate: document.getElementById('dueDate').value
+      };
+
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(taskData)
+        });
+
+        if (res.ok) {
+          alert('Task created successfully!');
+          window.location.href = 'dashboard.html'; // redirect to dashboard
+        } else {
+          const err = await res.json();
+          alert('Error creating task: ' + (err.message || 'Server error'));
+        }
+      } catch (error) {
+        alert('Error creating task: ' + error.message);
+      }
+    });
+
+    function goBack() {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

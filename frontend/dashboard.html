@@ -4,10 +4,34 @@
   <meta charset="utf-8" />
   <title>Dashboard - Student Task Tracker</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .progress-container {
+      width: 100%;
+      background: #ddd;
+      border-radius: 8px;
+      margin: 15px 0;
+      height: 25px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: green;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: width 0.4s ease;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>Task Dashboard</h2>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div id="progressBar" class="progress-bar">0%</div>
+    </div>
 
     <div class="dashboard-controls">
       <label>Status:</label>
@@ -43,6 +67,7 @@
         <option value="desc">Descending</option>
       </select>
 
+      <button onclick="window.location.href='createtask.html'">+ Create Task</button>
       <button onclick="loadTasks()">Apply</button>
       <button onclick="logout()">Logout</button>
     </div>
@@ -63,7 +88,7 @@
   </div>
 
   <script>
-    const API = "http://localhost:5000/api/tasks";
+    const API = "http://localhost:5001/api/tasks";
     const token = localStorage.getItem("token");
 
     async function loadTasks() {
@@ -76,37 +101,93 @@
         order: document.getElementById("order").value
       });
 
-      const res = await fetch(API + "?" + params.toString(), {
+      const res = await fetch(`${API}?${params.toString()}`, {
         headers: { Authorization: "Bearer " + token }
       });
+
       const tasks = await res.json();
       const tbody = document.querySelector("#taskTable tbody");
       tbody.innerHTML = "";
+
+      let completedCount = 0;
+
       tasks.forEach(t => {
+        if (t.status === "Completed") completedCount++;
+
         const row = `<tr>
           <td>${t.title}</td>
-          <td>${t.status}</td>
+          <td>
+            <select onchange="updateStatus('${t._id}', this.value)">
+              <option value="Pending" ${t.status === "Pending" ? "selected" : ""}>Pending</option>
+              <option value="In Progress" ${t.status === "In Progress" ? "selected" : ""}>In Progress</option>
+              <option value="Completed" ${t.status === "Completed" ? "selected" : ""}>Completed</option>
+            </select>
+          </td>
           <td>${t.priority}</td>
-          <td>${t.category}</td>
-          <td>${new Date(t.dueDate).toLocaleDateString()}</td>
+          <td>${t.category || ""}</td>
+          <td>${t.dueDate ? new Date(t.dueDate).toLocaleDateString() : ""}</td>
           <td>
             <button onclick="deleteTask('${t._id}')">Delete</button>
           </td>
         </tr>`;
         tbody.innerHTML += row;
       });
+
+      updateProgressBar(completedCount, tasks.length);
+    }
+
+    async function updateStatus(id, newStatus) {
+      try {
+        const res = await fetch(`${API}/${id}/status`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          alert("Error updating status: " + (err.message || "Server error"));
+        } else {
+          loadTasks();
+        }
+      } catch (error) {
+        alert("Error updating status: " + error.message);
+      }
     }
 
     async function deleteTask(id) {
-      await fetch(API + "/" + id, {
-        method: "DELETE",
-        headers: { Authorization: "Bearer " + token }
-      });
-      loadTasks();
+      if (!confirm("Are you sure you want to delete this task?")) return;
+
+      try {
+        const res = await fetch(`${API}/${id}`, {
+          method: "DELETE",
+          headers: { Authorization: "Bearer " + token }
+        });
+
+        if (res.ok) {
+          alert("Task deleted successfully!");
+          loadTasks();
+        } else {
+          const err = await res.json();
+          alert("Error deleting task: " + (err.message || "Server error"));
+        }
+      } catch (error) {
+        alert("Error deleting task: " + error.message);
+      }
+    }
+
+    function updateProgressBar(completed, total) {
+      const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+      const bar = document.getElementById("progressBar");
+      bar.style.width = percent + "%";
+      bar.textContent = percent + "%";
     }
 
     async function logout() {
-      await fetch("http://localhost:5000/api/auth/logout", {
+      await fetch("http://localhost:5001/api/auth/logout", {
         method: "POST",
         headers: { Authorization: "Bearer " + token }
       });
