@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Dashboard - Student Task Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Task Dashboard</h2>
+
+    <div class="dashboard-controls">
+      <label>Status:</label>
+      <select id="statusFilter">
+        <option value="">All</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+
+      <label>Priority:</label>
+      <select id="priorityFilter">
+        <option value="">All</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+
+      <label>Category:</label>
+      <input type="text" id="categoryFilter" placeholder="Category" />
+
+      <label>Search:</label>
+      <input type="text" id="searchBar" placeholder="Search by title" />
+
+      <label>Sort By:</label>
+      <select id="sortBy">
+        <option value="dueDate">Due Date</option>
+        <option value="priority">Priority</option>
+      </select>
+
+      <select id="order">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+
+      <button onclick="loadTasks()">Apply</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <table id="taskTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Category</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const API = "http://localhost:5000/api/tasks";
+    const token = localStorage.getItem("token");
+
+    async function loadTasks() {
+      const params = new URLSearchParams({
+        status: document.getElementById("statusFilter").value,
+        priority: document.getElementById("priorityFilter").value,
+        category: document.getElementById("categoryFilter").value,
+        search: document.getElementById("searchBar").value,
+        sortBy: document.getElementById("sortBy").value,
+        order: document.getElementById("order").value
+      });
+
+      const res = await fetch(API + "?" + params.toString(), {
+        headers: { Authorization: "Bearer " + token }
+      });
+      const tasks = await res.json();
+      const tbody = document.querySelector("#taskTable tbody");
+      tbody.innerHTML = "";
+      tasks.forEach(t => {
+        const row = `<tr>
+          <td>${t.title}</td>
+          <td>${t.status}</td>
+          <td>${t.priority}</td>
+          <td>${t.category}</td>
+          <td>${new Date(t.dueDate).toLocaleDateString()}</td>
+          <td>
+            <button onclick="deleteTask('${t._id}')">Delete</button>
+          </td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    async function deleteTask(id) {
+      await fetch(API + "/" + id, {
+        method: "DELETE",
+        headers: { Authorization: "Bearer " + token }
+      });
+      loadTasks();
+    }
+
+    async function logout() {
+      await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token }
+      });
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    loadTasks();
+  </script>
+</body>
+</html>

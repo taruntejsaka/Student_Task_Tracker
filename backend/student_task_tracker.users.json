@@ -1,0 +1,39 @@
+[{
+  "_id": {
+    "$oid": "68c219e11ae3390c3c0348fe"
+  },
+  "name": "Vardhanakula",
+  "email": "vardhanakula01@gmail.com",
+  "password": "$2b$10$9nFy2KRhRtib3IkWKeaf5OjlLK6BbJZgiex3yqGNLTGsPzuPpKUpC",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c74e47affc955e14b9aa0e"
+  },
+  "name": "Tarun Tej Saka",
+  "email": "taruntejsaka@gmail.com",
+  "passwordHash": "$2a$10$xHh7AAlnHwCqH10MDTETTuhMlJsGfJWYJWXNVotq/I/HDaxBAqY6.",
+  "createdAt": {
+    "$date": "2025-09-14T23:22:47.477Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-14T23:22:47.477Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c757d9740d88a8b720473d"
+  },
+  "name": "SaiSriVardhanAkula",
+  "email": "s225638987@deakin.edu.au",
+  "passwordHash": "$2a$10$wLgi.tEEELZ0IkrmpF6Ba.xYCdVSH759/lZrRR2M1.5bpQZhtEDGO",
+  "createdAt": {
+    "$date": "2025-09-15T00:03:37.040Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T00:03:37.040Z"
+  },
+  "__v": 0
+}]
