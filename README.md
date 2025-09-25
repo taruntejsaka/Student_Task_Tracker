@@ -136,4 +136,4 @@ This executes **Jest + SuperTest** tests for authentication and tasks.
 ---
 
 ##  Target Grade
-Both contributors are aiming for **HD** (High Distinction).  
+Both contributors are aiming for **D** (Distinction).  
