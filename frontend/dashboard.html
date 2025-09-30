@@ -69,6 +69,7 @@
 
       <button onclick="window.location.href='createtask.html'">+ Create Task</button>
       <button onclick="loadTasks()">Apply</button>
+      <button onclick="exportCalendar()">Export Calendar</button>
       <button onclick="logout()">Logout</button>
     </div>
 
@@ -193,6 +194,59 @@
       });
       localStorage.clear();
       window.location.href = "login.html";
+    }
+
+    async function exportCalendar() {
+      try {
+        if (!token) {
+          alert("Please login to export your calendar.");
+          return;
+        }
+        const params = new URLSearchParams({
+          status: document.getElementById("statusFilter").value,
+          priority: document.getElementById("priorityFilter").value,
+          category: document.getElementById("categoryFilter").value,
+          search: document.getElementById("searchBar").value
+        });
+        // Preflight: check if there are any tasks with due dates for these filters
+        const listRes = await fetch(`${API}?${params.toString()}`, {
+          headers: { Authorization: "Bearer " + token }
+        });
+        if (!listRes.ok) {
+          let err = {};
+          try { err = await listRes.json(); } catch (_) {}
+          alert("Error checking tasks: " + (err.message || err.error || `HTTP ${listRes.status}`));
+          return;
+        }
+        const list = await listRes.json();
+        const hasAnyWithDueDate = Array.isArray(list) && list.some(t => !!t.dueDate);
+        if (!hasAnyWithDueDate) {
+          alert("No tasks with due dates to export for the current filters.");
+          return;
+        }
+        const res = await fetch(`http://localhost:5001/api/tasks/export/ics?${params.toString()}`, {
+          headers: { Authorization: "Bearer " + token }
+        });
+        const contentType = res.headers.get('Content-Type') || '';
+        if (!res.ok || !contentType.includes('text/calendar')) {
+          let err = {};
+          try { err = await res.json(); } catch (_) {}
+          alert("Error exporting calendar: " + (err.message || err.error || `HTTP ${res.status}`));
+          return;
+        }
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tasks.ics';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        alert('Calendar exported as tasks.ics');
+      } catch (e) {
+        alert("Error exporting calendar: " + e.message);
+      }
     }
 
     loadTasks();
