@@ -132,7 +132,7 @@ This executes **Jest + SuperTest** tests for authentication and tasks.
 ##  Contributors
 - **Sai Sri Vardhan Akula** – Backend & Database  
 - **Tarun Tej Saka** – Frontend & UI
-- **Dastagir Mohammed - Frontend with Backendsupport 
+- Dastagir Mohammed - Frontend with Backendsupport 
 
 ---
 
